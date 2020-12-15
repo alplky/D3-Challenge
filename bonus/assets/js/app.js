@@ -22,6 +22,7 @@ const chartG = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
     .classed("chart-group", true);
 
+// axis data based on user selection
 const xScale = (data, selection) => {
 
     let selectionData
@@ -35,20 +36,22 @@ const xScale = (data, selection) => {
     console.log(selectionData)
           
     const x = d3.scaleLinear()
-        .domain([0, d3.max(selectionData)])
+        .domain([d3.min(selectionData) - 1, d3.max(selectionData)])
         .range([0, chartWidth])
           
         return(x)
 }
-          
+      
+// render x axis during transtition
 const renderXAxis = (xAxisG, newXScale) => {
     xAxis = d3.axisBottom(newXScale)
     xAxisG.transition()
         .duration(1000)
         .call(xAxis)
 }
-          
-const renderCircles = (circles, newXScale, selection) =>{
+
+// render circles based on user selection
+const renderCircles = (circles, newXScale, selection) => {
           
     let selectionDataKey
           
@@ -87,10 +90,6 @@ d3.csv("assets/data/data.csv").then(data => {
     chartG.append("g")
         .call(yAxis);
 
-    // chartG.append("g")
-    //     .attr("transform", `translate(0, ${chartHeight})`)
-    //     .call(xAxis);
-
     const xAxisG = chartG.append("g")
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis)
@@ -114,6 +113,7 @@ d3.csv("assets/data/data.csv").then(data => {
         .text("Age (Median)")
         .attr("dy", "40");
 
+    // click funtion to change x axis based on user selection
     xLabelArea.selectAll("text")
         .on("click", function() {
           const selection = d3.select(this).text()
@@ -136,18 +136,25 @@ d3.csv("assets/data/data.csv").then(data => {
     plotArea = chartG.append("g")
         .classed("plot-area", true)
 
-    // // bind data to groups for x and y data points
-    // const circleG = plotArea.selectAll("g")
-    //     .data(data)
-    //     .enter()
-    //     .append("g")
-    //     .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
+    // bind data to groups for x and y data points
+    const circleG = plotArea.selectAll("g")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
 
-    // // append circles, set radius, and fill
-    // circleG.append("circle")
-    //     .attr("r", 13)
-    //     .attr("stroke-width", 2)
-    //     .attr("fill", "rgb(89, 124, 158)")
+    // append circles, set radius, and fill
+    const circles = circleG.append("circle")
+        .attr("r", 13)
+        .attr("stroke-width", 2)
+        .attr("fill", "rgb(89, 124, 158)")
+        
+    circles.append("text")
+        .text(d => d.abbr)
+        .attr("stroke", "rgb(255, 255, 255)")
+        .attr("fill", "rgb(255, 255, 255)")
+        .attr("dy", ".3em")
+        .attr("text-anchor", "middle")
 
     // // add state abbreviations on top of circles
     // circleG.append("text")
@@ -157,13 +164,14 @@ d3.csv("assets/data/data.csv").then(data => {
     //     .attr("dy", ".3em")
     //     .attr("text-anchor", "middle")
 
-    const circles = chartG.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("cx", d => parseFloat(x(d.poverty)))
-        .attr("cy", d => parseFloat(y(d.healthcare)))
-        .attr("r", 10)
-
+    // const circles = chartG.selectAll("circle")
+    //     .data(data)
+    //     .enter()
+    //     .append("circle")
+    //     .attr("cx", d => parseFloat(x(d.poverty)))
+    //     .attr("cy", d => parseFloat(y(d.healthcare)))
+    //     .attr("r", 13)
+    //     .attr("stroke-width", 2)
+    //     .attr("fill", "rgb(89, 124, 158)")
 
     });
