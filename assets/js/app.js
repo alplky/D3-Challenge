@@ -52,12 +52,16 @@ d3.csv("assets/data/data.csv").then(data => {
     const xLabelArea = svg.append("g")
         .attr("transform", `translate(${svgWidth - 525}, ${svgHeight - margin.bottom + 45})`);
 
-    xLabelArea.append("text").attr("stroke", "#000000").text("In Poverty (%)")
+    xLabelArea.append("text")
+        .attr("stroke", "#000000")
+        .text("In Poverty (%)")
 
     const yLabelArea = svg.append("g")
-        .attr("transform", "rotate(-90)")
-        .attr("transform", `translate(${svgWidth - margin.left - 750}, ${svgHeight / 2})`, "rotate(-90)");
+        .attr("transform", `translate(${svgWidth - margin.left - 730}, ${svgHeight - 250})`, "rotate(-90)");
 
-    yLabelArea.append("text").attr("stroke", "#000000").text("Lacks Healthcare (%)");
+    yLabelArea.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("stroke", "#000000")
+        .text("Lacks Healthcare (%)");
 
 });
