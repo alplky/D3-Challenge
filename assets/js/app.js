@@ -33,7 +33,7 @@ d3.csv("assets/data/data.csv").then(data => {
 
     // establish x value
     const x = d3.scaleLinear()
-        .domain([0, d3.max(data.map(d => parseFloat(d.poverty)))])
+        .domain([d3.min(data.map(d => parseFloat(d.poverty))) + - 1, d3.max(data.map(d => parseFloat(d.poverty)))])
         .range([0, chartWidth]);
 
     // create axes values
@@ -54,7 +54,7 @@ d3.csv("assets/data/data.csv").then(data => {
 
     xLabelArea.append("text")
         .attr("stroke", "#000000")
-        .text("In Poverty (%)")
+        .text("In Poverty (%)");
 
     const yLabelArea = svg.append("g")
         .attr("transform", `translate(${svgWidth - margin.left - 730}, ${svgHeight - 250})`, "rotate(-90)");
@@ -64,14 +64,29 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("stroke", "#000000")
         .text("Lacks Healthcare (%)");
 
-    // bind data points to circles for scatter plot
-    const circles = chartG.selectAll("circle")
+    // create plot area for data points
+    plotArea = chartG.append("g")
+        .classed("plot-area", true)
+
+    // bind data to groups for x and y data points
+    circleG = plotArea.selectAll("g")
         .data(data)
         .enter()
-        .append("circle")
-        .attr("cx", d => parseFloat(x(d.poverty)))
-        .attr("cy", d => parseFloat(y(d.healthcare)))
-        .attr("r", 10)
+        .append("g")
+        .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
 
+    // append circles, set radius, and fill
+    circleG.append("circle")
+        .attr("r", 13)
+        .attr("stroke-width", 2)
+        .attr("fill", "rgb(89, 124, 158)")
+
+    // add state abbreviations on top of circles
+    circleG.append("text")
+        .text(d => d.abbr)
+        .attr("stroke", "rgb(255, 255, 255)")
+        .attr("fill", "rgb(255, 255, 255)")
+        .attr("dy", ".3em")
+        .attr("text-anchor", "middle")
 
     });
