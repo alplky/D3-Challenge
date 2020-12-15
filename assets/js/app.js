@@ -64,4 +64,14 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("stroke", "#000000")
         .text("Lacks Healthcare (%)");
 
-});
+    // bind data points to circles for scatter plot
+    const circles = chartG.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => parseFloat(x(d.poverty)))
+        .attr("cy", d => parseFloat(y(d.healthcare)))
+        .attr("r", 10)
+
+
+    });
