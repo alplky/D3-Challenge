@@ -57,7 +57,7 @@ d3.csv("assets/data/data.csv").then(data => {
         .text("In Poverty (%)");
 
     const yLabelArea = svg.append("g")
-        .attr("transform", `translate(${svgWidth - margin.left - 730}, ${svgHeight - 250})`, "rotate(-90)");
+        .attr("transform", `translate(${svgWidth - margin.left - 730}, ${svgHeight - 250})`);
 
     yLabelArea.append("text")
         .attr("transform", "rotate(-90)")
