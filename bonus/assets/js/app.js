@@ -1,12 +1,12 @@
 // set up entire svg area
-const svgHeight = 600;
-const svgWidth = 800;
+const svgHeight = 800;
+const svgWidth = 1000;
 
 const margin = {
-    top: 50, 
-    right: 50, 
-    bottom: 50, 
-    left: 50
+    top: 100, 
+    right: 100, 
+    bottom: 100, 
+    left: 100
 };
 
 const chartHeight = svgHeight - margin.top - margin.bottom;
@@ -50,14 +50,24 @@ d3.csv("assets/data/data.csv").then(data => {
 
     // create label areas and add text
     const xLabelArea = svg.append("g")
-        .attr("transform", `translate(${svgWidth - 525}, ${svgHeight - margin.bottom + 45})`);
+        .attr("transform", `translate(${svgWidth - 625}, ${svgHeight - margin.bottom + 45})`);
 
     xLabelArea.append("text")
         .attr("stroke", "#000000")
         .text("In Poverty (%)");
 
+    xLabelArea.append("text")
+        .attr("stroke", "#000000")
+        .text("Income (Median)")
+        .attr("dy", "20");
+
+    xLabelArea.append("text")
+        .attr("stroke", "#000000")
+        .text("Age (Median)")
+        .attr("dy", "40");
+
     const yLabelArea = svg.append("g")
-        .attr("transform", `translate(${svgWidth - margin.left - 730}, ${svgHeight - 250})`);
+        .attr("transform", `translate(${svgWidth - margin.left - 830}, ${svgHeight - 250})`);
 
     yLabelArea.append("text")
         .attr("transform", "rotate(-90)")
