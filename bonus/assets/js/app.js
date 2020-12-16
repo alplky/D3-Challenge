@@ -22,7 +22,7 @@ const chartG = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
     .classed("chart-group", true);
 
-// axis data based on user selection
+// axis data based on user selection of labels on the x axis
 const xScale = (data, selection) => {
 
     let selectionData
@@ -67,6 +67,53 @@ const renderCircles = (circles, newXScale, selection) => {
         .duration(1000)
         .attr("cx", d => newXScale(d[selectionDataKey]));
 };   
+//--------------------------------------------------------------------------
+// axis data based on user selection of labels on the y axis
+const yScale = (data, selection) => {
+
+    let selectionData
+    if (selection === "Lacks Healthcare (%)"){
+        selectionData = data.map(d => parseFloat(d.healthcare))
+    } else if (selection === "Obesity (%)"){
+        selectionData = data.map(d => parseFloat(d.obesity))
+    } else if (selection === "Smokes (%)"){
+        selectionData = data.map(d => parseFloat(d.smokes))
+    };
+    console.log(selectionData);
+          
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(selectionData)])
+        .range([chartHeight, 0]);
+          
+        return(y);
+}
+      
+// render y axis during transtition
+const renderYAxis = (yAxisG, newYScale) => {
+    yAxis = d3.axisLeft(newYScale);
+    yAxisG.transition()
+        .duration(1000)
+        .call(yAxis);
+};
+
+// render circles based on user selection
+const renderYCircles = (circles, newXScale, selection) => {
+          
+    let selectionDataKey
+          
+    if (selection === "Lacks Healthcare (%)"){
+        selectionDataKey = "healthcare"
+    } else if (selection === "Obesity (%)"){
+        selectionDataKey = "obesity"
+    } else if (selection === "Smokes (%)"){
+        selectionDataKey = "smokes"
+    };
+          
+    circles.transition()
+        .duration(1000)
+        .attr("cy", d => newYScale(d[selectionDataKey]));
+};
+//--------------------------------------------------------------------------------
 
 // read in data for scatter plot
 d3.csv("assets/data/data.csv").then(data => {
@@ -86,9 +133,9 @@ d3.csv("assets/data/data.csv").then(data => {
     const yAxis = d3.axisLeft(y);
     const xAxis = d3.axisBottom(x);
 
-    // put axes on the svg
-    chartG.append("g")
-        .call(yAxis);
+    // // put axes on the svg
+    // chartG.append("g")
+    //     .call(yAxis);
 
     const xAxisG = chartG.append("g")
         .attr("transform", `translate(0, ${chartHeight})`)
@@ -124,6 +171,9 @@ d3.csv("assets/data/data.csv").then(data => {
         })
 
     // Y labels ---------------------------------
+    const yAxisG = chartG.append("g")
+        .call(yAxis)
+
     const yLabelArea = svg.append("g")
         .attr("transform", `translate(${svgWidth - margin.left - 630}, ${svgHeight - 250})`);
 
@@ -131,6 +181,27 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("transform", "rotate(-90)")
         .attr("stroke", "#000000")
         .text("Lacks Healthcare (%)");
+
+    yLabelArea.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("stroke", "#000000")
+        .text("Obesity (%)")
+        .attr("dy", "-20")
+
+    yLabelArea.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("stroke", "#000000")
+        .text("Smokes (%)")
+        .attr("dy", "-40")
+
+    yLabelArea.selectAll("text")
+        .on("click", function() {
+          const selection = d3.select(this).text()
+          console.log(selection)
+          newYScale = yScale(data, selection)
+          renderYAxis(yAxisG, newYScale)
+          renderYCircles(circles, newYScale, selection) 
+        })
 
     // // create plot area for data points
     // plotArea = chartG.append("g")
@@ -173,7 +244,6 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("r", 13)
         .attr("stroke-width", 2)
         .attr("fill", "rgb(89, 124, 158)")
-
 
     circles.append("text")
         .text(d => d.abbr)
