@@ -10,7 +10,7 @@ const margin = {
 };
 
 const chartHeight = svgHeight - margin.top - margin.bottom;
-const chartWidth = svgHeight - margin.left - margin.right;
+const chartWidth = svgHeight - margin.left - margin.right + 200;
 
 // create svg to append to body of html
 const svg = d3.select("#scatter").append("svg")
@@ -50,7 +50,7 @@ d3.csv("assets/data/data.csv").then(data => {
 
     // create label areas and add text
     const xLabelArea = svg.append("g")
-        .attr("transform", `translate(${svgWidth - 525}, ${svgHeight - margin.bottom + 45})`);
+        .attr("transform", `translate(${svgWidth - 425}, ${svgHeight - margin.bottom + 45})`);
 
     xLabelArea.append("text")
         .attr("stroke", "#000000")
