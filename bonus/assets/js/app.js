@@ -3,14 +3,14 @@ const svgHeight = 600;
 const svgWidth = 800;
 
 const margin = {
-    top: 100, 
-    right: 100, 
+    top: 50, 
+    right: 50, 
     bottom: 100, 
     left: 100
 };
 
 const chartHeight = svgHeight - margin.top - margin.bottom;
-const chartWidth = svgHeight - margin.left - margin.right;
+const chartWidth = svgHeight - margin.left - margin.right + 200;
 
 // create svg to append to body of html
 const svg = d3.select("#scatter").append("svg")
@@ -98,7 +98,7 @@ const renderYAxis = (yAxisG, newYScale) => {
 };
 
 // render circles based on user selection
-const renderYCircles = (circles, newXScale, selection) => {
+const renderYCircles = (circles, newYScale, selection) => {
           
     let selectionDataKey
           
@@ -141,7 +141,7 @@ d3.csv("assets/data/data.csv").then(data => {
         .call(xAxis)
 
     const xLabelArea = svg.append("g")
-        .attr("transform", `translate(${svgWidth - 575}, ${svgHeight - margin.bottom + 45})`);
+        .attr("transform", `translate(${svgWidth - 475}, ${svgHeight - margin.bottom + 45})`);
 
     xLabelArea.append("text")
         .classed("active", true)
@@ -207,52 +207,28 @@ d3.csv("assets/data/data.csv").then(data => {
           renderYCircles(circles, newYScale, selection) 
         })
 
-    // // create plot area for data points
-    // plotArea = chartG.append("g")
-    //     .classed("plot-area", true)
+    // create plot area for data points
+    plotArea = chartG.append("g")
+        .classed("plot-area", true)
 
-    // // bind data to groups for x and y data points
-    // const circleG = plotArea.selectAll("g")
-    //     .data(data)
-    //     .enter()
-    //     .append("g")
-    //     .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
-
-    // // append circles, set radius, and fill
-    // const circles = circleG.append("circle")
-    //     .attr("r", 13)
-    //     .attr("stroke-width", 2)
-    //     .attr("fill", "rgb(89, 124, 158)")
-        
-    // circles.append("text")
-    //     .text(d => d.abbr)
-    //     .attr("stroke", "rgb(255, 255, 255)")
-    //     .attr("fill", "rgb(255, 255, 255)")
-    //     .attr("dy", ".3em")
-    //     .attr("text-anchor", "middle")
-
-    // // add state abbreviations on top of circles
-    // circleG.append("text")
-    //     .text(d => d.abbr)
-    //     .attr("stroke", "rgb(255, 255, 255)")
-    //     .attr("fill", "rgb(255, 255, 255)")
-    //     .attr("dy", ".3em")
-    //     .attr("text-anchor", "middle")
-
-    // create circles for base plot before selections
-    const circles = chartG.selectAll("circle")
+    // bind data to groups for x and y data points
+    const circleG = plotArea.selectAll("g")
         .data(data)
         .enter()
-        .append("circle")
-        .attr("cx", d => parseFloat(x(d.poverty)))
-        .attr("cy", d => parseFloat(y(d.healthcare)))
+        .append("g")
+
+    // append circles, set radius, and fill
+    const circles = circleG.append("circle")
         .attr("r", 13)
         .attr("stroke-width", 1)
-        .classed("stateCircle", true)
+        .attr("cx", d => parseFloat(x(d.poverty)))
+        .attr("cy", d => parseFloat(y(d.healthcare)))
+        .classed("stateCircle", true);
 
-    circles.append("text")
+    circleG.append("text")
         .text(d => d.abbr)
+        .attr("stroke", "rgb(255, 255, 255)")
+        .attr("fill", "rgb(255, 255, 255)")
         .attr("dy", ".3em")
-        .classed("stateText", true)
-
+        .attr("text-anchor", "middle");
     });
