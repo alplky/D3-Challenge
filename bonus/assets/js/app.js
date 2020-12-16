@@ -32,23 +32,23 @@ const xScale = (data, selection) => {
         selectionData = data.map(d => parseFloat(d.income))
     } else if (selection === "Age (Median)"){
         selectionData = data.map(d => parseFloat(d.age))
-    }
-    console.log(selectionData)
+    };
+    console.log(selectionData);
           
     const x = d3.scaleLinear()
-        .domain([d3.min(selectionData) - 1, d3.max(selectionData)])
-        .range([0, chartWidth])
+        .domain([d3.min(selectionData) - d3.min(selectionData) * 0.1, d3.max(selectionData)])
+        .range([0, chartWidth]);
           
-        return(x)
+        return(x);
 }
       
 // render x axis during transtition
 const renderXAxis = (xAxisG, newXScale) => {
-    xAxis = d3.axisBottom(newXScale)
+    xAxis = d3.axisBottom(newXScale);
     xAxisG.transition()
         .duration(1000)
-        .call(xAxis)
-}
+        .call(xAxis);
+};
 
 // render circles based on user selection
 const renderCircles = (circles, newXScale, selection) => {
@@ -61,23 +61,23 @@ const renderCircles = (circles, newXScale, selection) => {
         selectionDataKey = "income"
     } else if (selection === "Age (Median)"){
         selectionDataKey = "age"
-    }
+    };
           
     circles.transition()
         .duration(1000)
-        .attr("cx", d => newXScale(d[selectionDataKey]))
-}   
+        .attr("cx", d => newXScale(d[selectionDataKey]));
+};   
 
 // read in data for scatter plot
 d3.csv("assets/data/data.csv").then(data => {
     console.log(data);
 
-    // establish y value
+    // establish y scale
     const y = d3.scaleLinear()
         .domain([0, d3.max(data.map(d => parseFloat(d.healthcare)))])
         .range([chartHeight, 0]);
 
-    // establish x value
+    // establish x scale
     const x = d3.scaleLinear()
         .domain([d3.min(data.map(d => parseFloat(d.poverty))) + - 1, d3.max(data.map(d => parseFloat(d.poverty)))])
         .range([0, chartWidth]);
@@ -132,29 +132,29 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("stroke", "#000000")
         .text("Lacks Healthcare (%)");
 
-    // create plot area for data points
-    plotArea = chartG.append("g")
-        .classed("plot-area", true)
+    // // create plot area for data points
+    // plotArea = chartG.append("g")
+    //     .classed("plot-area", true)
 
-    // bind data to groups for x and y data points
-    const circleG = plotArea.selectAll("g")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
+    // // bind data to groups for x and y data points
+    // const circleG = plotArea.selectAll("g")
+    //     .data(data)
+    //     .enter()
+    //     .append("g")
+    //     .attr("transform", d => `translate(${x(parseFloat(d.poverty))}, ${y(parseFloat(d.healthcare))})`)
 
-    // append circles, set radius, and fill
-    const circles = circleG.append("circle")
-        .attr("r", 13)
-        .attr("stroke-width", 2)
-        .attr("fill", "rgb(89, 124, 158)")
+    // // append circles, set radius, and fill
+    // const circles = circleG.append("circle")
+    //     .attr("r", 13)
+    //     .attr("stroke-width", 2)
+    //     .attr("fill", "rgb(89, 124, 158)")
         
-    circles.append("text")
-        .text(d => d.abbr)
-        .attr("stroke", "rgb(255, 255, 255)")
-        .attr("fill", "rgb(255, 255, 255)")
-        .attr("dy", ".3em")
-        .attr("text-anchor", "middle")
+    // circles.append("text")
+    //     .text(d => d.abbr)
+    //     .attr("stroke", "rgb(255, 255, 255)")
+    //     .attr("fill", "rgb(255, 255, 255)")
+    //     .attr("dy", ".3em")
+    //     .attr("text-anchor", "middle")
 
     // // add state abbreviations on top of circles
     // circleG.append("text")
@@ -164,14 +164,22 @@ d3.csv("assets/data/data.csv").then(data => {
     //     .attr("dy", ".3em")
     //     .attr("text-anchor", "middle")
 
-    // const circles = chartG.selectAll("circle")
-    //     .data(data)
-    //     .enter()
-    //     .append("circle")
-    //     .attr("cx", d => parseFloat(x(d.poverty)))
-    //     .attr("cy", d => parseFloat(y(d.healthcare)))
-    //     .attr("r", 13)
-    //     .attr("stroke-width", 2)
-    //     .attr("fill", "rgb(89, 124, 158)")
+    const circles = chartG.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => parseFloat(x(d.poverty)))
+        .attr("cy", d => parseFloat(y(d.healthcare)))
+        .attr("r", 13)
+        .attr("stroke-width", 2)
+        .attr("fill", "rgb(89, 124, 158)")
+
+
+    circles.append("text")
+        .text(d => d.abbr)
+        .attr("stroke", "rgb(255, 255, 255)")
+        .attr("fill", "rgb(255, 255, 255)")
+        .attr("dy", ".3em")
+        .attr("text-anchor", "middle")
 
     });
