@@ -22,7 +22,8 @@ const chartG = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
     .classed("chart-group", true);
 
-// axis data based on user selection of labels on the x axis
+
+// axis data based on user selection of labels on the x axis -----------------------------------------------------------
 const xScale = (data, selection) => {
 
     let selectionData
@@ -67,8 +68,8 @@ const renderCircles = (circles, newXScale, selection) => {
         .duration(1000)
         .attr("cx", d => newXScale(d[selectionDataKey]));
 };   
-//--------------------------------------------------------------------------
-// axis data based on user selection of labels on the y axis
+
+// axis data based on user selection of labels on the y axis ----------------------------------------------------------
 const yScale = (data, selection) => {
 
     let selectionData
@@ -113,9 +114,8 @@ const renderYCircles = (circles, newXScale, selection) => {
         .duration(1000)
         .attr("cy", d => newYScale(d[selectionDataKey]));
 };
-//--------------------------------------------------------------------------------
 
-// read in data for scatter plot
+// read in data for scatter plot --------------------------------------------------------------------
 d3.csv("assets/data/data.csv").then(data => {
     console.log(data);
 
@@ -129,33 +129,33 @@ d3.csv("assets/data/data.csv").then(data => {
         .domain([d3.min(data.map(d => parseFloat(d.poverty))) + - 1, d3.max(data.map(d => parseFloat(d.poverty)))])
         .range([0, chartWidth]);
 
-    // create axes values
+    // create base axes values
     const yAxis = d3.axisLeft(y);
     const xAxis = d3.axisBottom(x);
 
-    // // put axes on the svg
-    // chartG.append("g")
-    //     .call(yAxis);
 
+    // create label areas and add text
+    // X labels ---------------------------------
     const xAxisG = chartG.append("g")
         .attr("transform", `translate(0, ${chartHeight})`)
         .call(xAxis)
 
-    // create label areas and add text
-    // X labels ---------------------------------
     const xLabelArea = svg.append("g")
         .attr("transform", `translate(${svgWidth - 575}, ${svgHeight - margin.bottom + 45})`);
 
     xLabelArea.append("text")
+        .classed("active", true)
         .attr("stroke", "#000000")
         .text("In Poverty (%)");
 
     xLabelArea.append("text")
+        .classed("active", true)
         .attr("stroke", "#000000")
         .text("Income (Median)")
         .attr("dy", "20");
 
     xLabelArea.append("text")
+        .classed("active", true)
         .attr("stroke", "#000000")
         .text("Age (Median)")
         .attr("dy", "40");
@@ -178,22 +178,26 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("transform", `translate(${svgWidth - margin.left - 630}, ${svgHeight - 250})`);
 
     yLabelArea.append("text")
+        .classed("active", true)
         .attr("transform", "rotate(-90)")
         .attr("stroke", "#000000")
         .text("Lacks Healthcare (%)");
 
     yLabelArea.append("text")
+        .classed("active", true)
         .attr("transform", "rotate(-90)")
         .attr("stroke", "#000000")
         .text("Obesity (%)")
         .attr("dy", "-20")
 
     yLabelArea.append("text")
+        .classed("active", true)
         .attr("transform", "rotate(-90)")
         .attr("stroke", "#000000")
         .text("Smokes (%)")
         .attr("dy", "-40")
 
+    // click funtion to change y axis based on user selection    
     yLabelArea.selectAll("text")
         .on("click", function() {
           const selection = d3.select(this).text()
@@ -235,6 +239,7 @@ d3.csv("assets/data/data.csv").then(data => {
     //     .attr("dy", ".3em")
     //     .attr("text-anchor", "middle")
 
+    // create circles for base plot before selections
     const circles = chartG.selectAll("circle")
         .data(data)
         .enter()
@@ -242,14 +247,12 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("cx", d => parseFloat(x(d.poverty)))
         .attr("cy", d => parseFloat(y(d.healthcare)))
         .attr("r", 13)
-        .attr("stroke-width", 2)
-        .attr("fill", "rgb(89, 124, 158)")
+        .attr("stroke-width", 1)
+        .classed("stateCircle", true)
 
     circles.append("text")
         .text(d => d.abbr)
-        .attr("stroke", "rgb(255, 255, 255)")
-        .attr("fill", "rgb(255, 255, 255)")
         .attr("dy", ".3em")
-        .attr("text-anchor", "middle")
+        .classed("stateText", true)
 
     });
