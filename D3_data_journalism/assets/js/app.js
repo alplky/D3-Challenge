@@ -77,8 +77,9 @@ d3.csv("assets/data/data.csv").then(data => {
 
     // append circles, set radius, and fill
     circleG.append("circle")
+        .classed("stateCircle", true)
         .attr("r", 13)
-        .attr("stroke-width", 2)
+        .attr("stroke-width", 1)
         .attr("fill", "rgb(89, 124, 158)")
 
     // add state abbreviations on top of circles
