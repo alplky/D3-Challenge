@@ -133,7 +133,6 @@ d3.csv("assets/data/data.csv").then(data => {
     const yAxis = d3.axisLeft(y);
     const xAxis = d3.axisBottom(x);
 
-
     // create label areas and add text
     // X labels ---------------------------------
     const xAxisG = chartG.append("g")
@@ -204,7 +203,7 @@ d3.csv("assets/data/data.csv").then(data => {
           console.log(selection)
           newYScale = yScale(data, selection)
           renderYAxis(yAxisG, newYScale)
-          renderYCircles(circles, newYScale, selection) 
+          renderYCircles(circles, newYScale, selection)
         })
 
     // create plot area for data points
@@ -225,10 +224,9 @@ d3.csv("assets/data/data.csv").then(data => {
         .attr("cy", d => parseFloat(y(d.healthcare)))
         .classed("stateCircle", true);
 
-    circleG.append("text")
-        .text(d => d.abbr)
-        .attr("stroke", "rgb(255, 255, 255)")
-        .attr("fill", "rgb(255, 255, 255)")
-        .attr("dy", ".3em")
-        .attr("text-anchor", "middle");
+    // circleG.append("text")
+    //     .text(d => d.abbr)
+    //     .attr("stroke", "rgb(255, 255, 255)")
+    //     .attr("fill", "rgb(255, 255, 255)")
+    //     .attr("text-anchor", "middle");
     });
