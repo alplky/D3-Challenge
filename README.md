@@ -10,7 +10,7 @@ With the provided data, analyze health risks facing particular demographics by c
 * HTML
 
 ## Objectives
-1. Create a scatter plot between two data variables that represents each state with circle elements.
+1. Create a scatter plot between two data variables that represent each state with circle elements.
 
 2. Bonus: Include more demographics by placing additional labels on the x and y axes. Animate the transitions for the circles' locations as well as the range of the axes.
 
